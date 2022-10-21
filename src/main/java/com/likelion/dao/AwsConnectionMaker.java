@@ -12,7 +12,7 @@ public class AwsConnectionMaker implements ConnectionMaker {
         Map<String, String> env = System.getenv();
         // DB접속 (ex sql workbeanch실행)
         Connection c = DriverManager.getConnection(env.get("DB_HOST"),
-                env.get("DB_USER"), env.get("DB_PASSWORD"));
+                env.get("DB_NAME"), env.get("DB_PASSWORD"));
         return c;
     }
 }
