@@ -48,26 +48,18 @@ public class UserDao {
     }
 
     public void add(User user) {
-        Map<String, String> env = System.getenv();
-        try {
-            // DB접속 (ex sql workbeanch실행)
-            Connection c = cm.makeConnection();
+        jdbcContextWithStatementStrategy(new StatementStrategy() {
+            @Override
+            public PreparedStatement makePreparedStatement(Connection connection) throws SQLException {
 
-            // Query문 작성
-            PreparedStatement pstmt = c.prepareStatement("INSERT INTO users(id, name, password) VALUES(?,?,?);");
-            pstmt.setString(1, user.getId());
-            pstmt.setString(2, user.getName());
-            pstmt.setString(3, user.getPassword());
+                PreparedStatement pstmt = connection.prepareStatement("INSERT INTO users(id, name, password) VALUES(?,?,?);");
+                pstmt.setString(1, user.getId());
+                pstmt.setString(2, user.getName());
+                pstmt.setString(3, user.getPassword());
 
-            // Query문 실행
-            pstmt.executeUpdate();
-
-            pstmt.close();
-            c.close();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+                return pstmt;
+            }
+        });
     }
 
     public User get(String id) {
